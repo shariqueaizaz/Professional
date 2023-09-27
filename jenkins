@@ -1,0 +1,92 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                echo "Build the code. Tool: Maven"
+
+ 
+
+            }
+        }
+
+ 
+
+        stage('Unit and Integration Tests') {
+            steps {
+                echo "Run unit tests. Tools: JUnit (Unit Tests), Selenium (Integration Tests)"
+            }
+            post{
+failure {
+        emailext to: "recipient@example.com",
+        subject: "Pipeline Failed",
+        body: "Pipeline failed. Please investigate.",
+        attachLog: true
+    }
+        always{
+            emailext to: "sharique.aizaz19@gmail.com",
+            subject: "Test Email",
+            body: "Test",
+            attachLog: true
+        }
+    }
+        }
+
+ 
+
+        stage('Code Analysis') {
+            steps {
+                echo "Integrate a code analysis tool to analyse. Tool: SonarQube "
+            }
+        }
+
+ 
+
+        stage('Security Scan') {
+            steps {
+                echo "Perform a security scan. Tool: OWASP ZAP "
+            }
+	    post{
+failure {
+        emailext to: "recipient@example.com",
+        subject: "Pipeline Failed",
+        body: "Pipeline failed. Please investigate.",
+        attachLog: true
+    }
+               always{
+            emailext to: "sharique.aizaz19@gmail.com",
+            subject: "Security scan Email",
+            body: "Security Scan successful",
+            attachLog: true
+        }
+    }
+        }
+
+ 
+
+        stage('Deploy to Staging') {
+            steps {
+                echo "Deploy the application to a staging server (e.g., AWS EC2 instance)."
+
+ 
+
+            }
+        }
+
+ 
+
+        stage('Integration Tests on Staging') {
+            steps {
+                echo "Run integration tests on the staging environment in production-like environment."
+            }
+        }
+	stage('Deploy to Production') {
+            steps {
+                echo "Deploy the application to a production server (e.g., AWS EC2 instance)."
+            }
+
+ 
+
+        }
+    }
+}
